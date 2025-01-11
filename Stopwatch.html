@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stopwatch with Microseconds</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f9fafb;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .container {
+      text-align: center;
+      background: #ffffff;
+      border-radius: 15px;
+      padding: 50px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      width: 500px;
+    }
+    .time {
+      font-size: 3em;
+      font-weight: bold;
+      color: #1d4ed8;
+      margin-bottom: 40px;
+    }
+    .buttons {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+    }
+    button {
+      font-size: 1.2em;
+      padding: 15px 30px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.2s;
+    }
+    button#start {
+      background-color: #22c55e;
+      color: #fff;
+    }
+    button#start:hover {
+      background-color: #16a34a;
+      transform: scale(1.05);
+    }
+    button#stop {
+      background-color: #f97316;
+      color: #fff;
+    }
+    button#stop:hover {
+      background-color: #ea580c;
+      transform: scale(1.05);
+    }
+    button#reset {
+      background-color: #3b82f6;
+      color: #fff;
+    }
+    button#reset:hover {
+      background-color: #2563eb;
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="time" id="display">00:00:00.000</div>
+    <div class="buttons">
+      <button id="start">Start</button>
+      <button id="stop">Stop</button>
+      <button id="reset">Reset</button>
+    </div>
+  </div>
+
+  <script>
+    let milliseconds = 0;
+    let timerInterval;
+
+    function formatTime(ms) {
+      const hrs = String(Math.floor(ms / 3600000)).padStart(2, '0');
+      const mins = String(Math.floor((ms % 3600000) / 60000)).padStart(2, '0');
+      const secs = String(Math.floor((ms % 60000) / 1000)).padStart(2, '0');
+      const msecs = String(ms % 1000).padStart(3, '0');
+      return `${hrs}:${mins}:${secs}.${msecs}`;
+    }
+
+    function startTimer() {
+      if (!timerInterval) {
+        const start = Date.now() - milliseconds;
+        timerInterval = setInterval(() => {
+          milliseconds = Date.now() - start;
+          document.getElementById('display').textContent = formatTime(milliseconds);
+        }, 10); // Update every 10ms
+      }
+    }
+
+    function stopTimer() {
+      clearInterval(timerInterval);
+      timerInterval = null;
+    }
+
+    function resetTimer() {
+      stopTimer();
+      milliseconds = 0;
+      document.getElementById('display').textContent = "00:00:00.000";
+    }
+
+    document.getElementById('start').addEventListener('click', startTimer);
+    document.getElementById('stop').addEventListener('click', stopTimer);
+    document.getElementById('reset').addEventListener('click', resetTimer);
+  </script>
+</body>
+</html>
